@@ -118,11 +118,10 @@ def getXiaoquList(fang_url):
                 #result['quyu'] ='1'
                 # result['bankuai'] = '1'
                 # result['price'] ='1'
-
                 result['age'] = '' #fang.select('.positionIcon')[0].contents[5].strip()
                 result['subway'] = ''
                 result['onsale_num'] = ''
-                result['fang_url'] = ''
+                result['fang_url'] = fang.select('.xiaoquListItemSellCount')[0].a['href'].strip()
                 # if len(fang.select('.con')[0].contents) >= 5:
                 #     result['age'] = fang.select('.con')[0].contents[-1].string.strip()
                 # if len(fang.select('.fang-subway-ex')) > 0:
@@ -134,8 +133,7 @@ def getXiaoquList(fang_url):
                 #     getLianjiaList(result['fang_url'])
                 result['updated_date']=time.strftime('%Y-%m-%d %H:%M:%S', time.localtime(time.time()))
                 mySQL.insertData('lianjia_fang_xiaoqu', result)
-                print getCurrentTime(), u'小区：', result['xiaoqu_key'], result['xiaoqu_name'], result['age'], result[ 'quyu'],result['bankuai'], \
-                                                     result['subway'], result['xiaoqu_url'], result['price'], result['onsale_num'], result['fang_url']
+                print getCurrentTime(), u'小区：', result['xiaoqu_key'], result['xiaoqu_name'], result['age'], result[ 'quyu'],result['bankuai'], result['subway'], result['xiaoqu_url'], result['price'], result['onsale_num'], result['fang_url']
                 getLianjiaList(result['fang_url'])
             except Exception, e:
                 print  getCurrentTime(), u"Exception:%d: %s" % (e.args[0], e.args[1])
@@ -146,6 +144,7 @@ def getLianjiaList(fang_url):
     base_url = 'http://sh.lianjia.com'
     # res=requests.get(fang_url)
     res = getURL(fang_url)
+    print 'fang_url'+fang_url
     res.encoding = 'utf-8'
     soup = BeautifulSoup(res.text, 'html.parser')
     for fang in soup.select('.info-panel'):
